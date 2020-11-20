@@ -1,9 +1,18 @@
-data.process <- function(df,loc="RI",data.params=NULL, mult = 1){
+#!/usr/bin/env Rscript
+
+# mcmc-odesim.R
+# authors: Ephraim Hanks, Nathan Wikle, Emily Strong
+# last edited: 20 Nov 2020 
+#
+# This function (data.process) takes state-level covid data and returns output
+#   which matches that produced by odesim. Returns list with appropriate
+#   epidemic data.
+
+
+data.process <- function(df, loc = "RI"){
   # Input
   #   df: data frame object
-  #   loc: "State"
-  #   data.params: placeholder for parameters shifting the data
-  #   mult: c.t multiplier, used to check if random screening code is correct
+  #   loc: US state of interest ("RI" (default), "MA", "PA")
   # Output
   #   Named list with the following objects:
   #     days, cases.cum, cases.new, cases.age.new,
@@ -140,7 +149,7 @@ data.process <- function(df,loc="RI",data.params=NULL, mult = 1){
     c.t[idx.days[[8]],8:9]=791.4/ri.pop.70plus ## august (NEED TO CHANGE EVENTUALLY)
     c.t[idx.days[[9]],8:9]=791.4/ri.pop.70plus ## september (NEED TO CHANGE EVENTUALLY)
     
-    c.t <- c.t * mult
+    c.t <- c.t
   }
  
   list(days=days,
