@@ -1,7 +1,22 @@
-#Get global options
+#!/usr/bin/env Rscript
+
+# loglik-odesim.R
+# authors: Ephraim Hanks, Nathan Wikle, Emily Strong
+# last edited: 20 Nov 2020 
+#
+# This file defines the functions used to calculate the ikelihoood for 
+#   all odesim parameters. In an effort to speed up the base-r
+#   implementation of 'dmultinom', a Python-based multinomial logpmf
+#   function is defined -- this requires the embedding of a Python 
+#   session within R via the 'reticulate' packaged. If Python is 
+#   unavailable, a global variable called 'OPT_USE_PY_LL' must be 
+#   set to FALSE. If not, an error will be thrown. If Python is 
+#   enabled, this need not be defined.
+
+### get global options, OPT_USE_PY_LL must == FALSE if Python is not enabled
 OPT_USE_PY_LL = get0('OPT_USE_PY_LL', ifnotfound = TRUE)
 
-#Helper 1 - Get sums of times spans bounded by times
+### helper 1 - get sums of times spans bounded by times
 time_slicer = function(vals, times){
   out = matrix(nrow=length(times)-1, ncol=ncol(vals))
   for(kk in 2:length(times)){
@@ -14,10 +29,11 @@ time_slicer = function(vals, times){
   return(out)
 }
 
-#Helper 2 - Sum up log likelihood for several rows
+### helper 2 - sum up log likelihood for several rows
 r_ll = function(means, counts){
  row_lls = sapply(1:nrow(means),
-                  function (i) dmultinom(round(counts[i,]), prob=means[i,], log=TRUE))
+                  function (i) dmultinom(round(counts[i,]), 
+                                  prob=means[i,], log=TRUE))
  return(sum(row_lls))
 }
 
