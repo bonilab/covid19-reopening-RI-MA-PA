@@ -13,10 +13,13 @@
 #   set to FALSE. If not, an error will be thrown. If Python is 
 #   enabled, this need not be defined.
 
-### get global options, OPT_USE_PY_LL must == FALSE if Python is not enabled
+
+### 1. Check if Python is enabled, write Python-based multinomial logpmf
+
+# get global options, OPT_USE_PY_LL must == FALSE if Python is not enabled
 OPT_USE_PY_LL = get0('OPT_USE_PY_LL', ifnotfound = TRUE)
 
-### helper 1 - get sums of times spans bounded by times
+# helper 1 - get sums of times spans bounded by times
 time_slicer = function(vals, times){
   out = matrix(nrow=length(times)-1, ncol=ncol(vals))
   for(kk in 2:length(times)){
@@ -29,7 +32,7 @@ time_slicer = function(vals, times){
   return(out)
 }
 
-### helper 2 - sum up log likelihood for several rows
+# helper 2 - sum up log likelihood for several rows
 r_ll = function(means, counts){
  row_lls = sapply(1:nrow(means),
                   function (i) dmultinom(round(counts[i,]), 
@@ -37,7 +40,7 @@ r_ll = function(means, counts){
  return(sum(row_lls))
 }
 
-#Helper 3 - Python based multinomial logpmf
+# helper 3 - Python-based multinomial logpmf
 if (OPT_USE_PY_LL){
   tryCatch({
     library(reticulate)
@@ -52,35 +55,39 @@ if (OPT_USE_PY_LL){
   multinom_log_pmf = r_ll
 }
 
-loglik.odesim <- function(traj,
-                          df,  ## data
-                          dp=NULL,
-                          odesim.ver="v5",
-                          P=P, ## matrix computed from testing delays
-                          loc=loc,
-                          report.rate,
-                          nb.disp.params=NULL,
-                          extra.params=NULL, ## replaces hosp.rr (fitted)
-                          extra.const.params=NULL, ## replaces hosp.rr (constant)
-                          ## hosp.rr, # ADDED HOSPITALIZATION REPORTING RATE (fixed)
-                          s2.hosp=NULL,
-                          s2.icu=NULL,
-                          s2.vent=NULL,
-                          lik.tot=TRUE,             # data for total new cases
-                          lik.hosp.new=FALSE,       # data on new hospitalizations - SHOULD BE TRUE
-                          lik.age=FALSE,            # general flag for whether to use age information or not (in symp incidence and hosp incidence) - SHOULD BE TRUE
-                          lik.hosp.curr=TRUE,
-                          lik.icu.curr=TRUE,
-                          lik.vent.curr=TRUE,
-                          lik.tot.deaths=FALSE,
-                          lik.home.deaths=FALSE,
-                          lik.hosp.deaths=FALSE,
-                          lik.age.deaths=FALSE,
-                          lik.hosp.discharges=FALSE,
-                          active.surv=TRUE,
-                          p.asympt=.4,
-                          case.constraint=FALSE,
-                          ...){     
+### 2. Define loglik.odesim function to calculate loglikelihood. 
+###       Outputs list of log-likelihood values.
+
+loglik.odesim <- function(
+  traj,                         # trajectories generated via odesim (using traj.from.params)
+  df,                           # state-level covid data
+  dp = NULL,                    # formatted state-level covid data (using data.process)
+  odesim.ver = "v5",            # version of odesim (defaults to "v5")
+  loc = loc,                    # US state used for analysis (one of "RI", "MA", or "PA")
+  report.rate,                  # vector of daily symptomatic reporting rates
+  nb.disp.params = NULL,        # vector neg. binomial dispersion parameters
+  extra.params = NULL,          # fitted params not found in odesim (most likely hosp.report.rate)
+  extra.const.params = NULL,    # constant params not found in odesim (most likely hosp.report.rate)
+  s2.hosp = NULL,               # variance param of current hosp. likelihood
+  s2.icu = NULL,                # variance param of current icu likelihood
+  s2.vent = NULL,               # variance param of current vents likelihood
+  lik.tot = TRUE,               # evaluate likelihood for total new cases ONLY (ie, set F and use lik.age for age-strat. data; default = TRUE)
+  lik.age = FALSE,              # evaluate likelihood for age-struc. new cases and hosps AND total new cases and hosps (default = FALSE)
+  lik.hosp.new = TRUE,          # evaluate likelihood for new hosp. cases (default = FALSE)
+  lik.hosp.curr = FALSE,        # evaluate likelihood for current hosp. (default = FALSE)
+  lik.icu.curr = FALSE,         # evaluate likelihood for current icu admits (default = FALSE)
+  lik.vent.curr = FALSE,        # evaluate likelihood for current vent admits (default = FALSE)
+  lik.tot.deaths = FALSE,       # evaluate likelihood for tot. deaths ONLY (ie, set F and use lik.age.deaths for age-strat. data; default = FALSE)
+  lik.age.deaths = FALSE,       # evaluate likelihood for age-struc. new deaths and total new deaths (default = FALSE)
+  lik.home.deaths = FALSE,      # evaluate likelihood for new home deaths (default = FALSE)
+  lik.hosp.deaths = FALSE,      # evaluate likelihood for new hosp. deaths (default = FALSE)
+  lik.hosp.discharges = FALSE,  # evaluate likelihood for hospital discharges (default = FALSE)
+  active.surv = FALSE,          # include active surveillance data (default = FALSE)
+  p.asympt = 0.4,               # proportion of asymptomatic individuals (default = 0.4; CAUTION: DO NOT CHANGE UNLESS ODESIM REFLECTS A 
+  case.constraint = FALSE,      # constrain fit to cumulative cases to be within 10% of data (default = FALSE)
+  P = P,                        # testing delay matrix, computed from 'p.vecs' input in mcmc-odesim.R
+  ...
+){     
 
   ##################################
   ## handling "extra parameters" ###
@@ -146,7 +153,7 @@ loglik.odesim <- function(traj,
   ################################################################################
   ###                                                                          ###
   ### NOTE that this function REQUIRES a function called "data.process", which ### 
-  ###   may take other parameters (in ...)                                     ###
+  ###   may take other parameters (via ...)                                    ###
   ###                                                                          ###  
   ################################################################################
     
