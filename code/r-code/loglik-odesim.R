@@ -63,7 +63,7 @@ loglik.odesim <- function(traj,
                           lik.hosp.discharges=FALSE,
                           active.surv=TRUE,
                           p.asympt=.4,
-                          total.size.constraint=FALSE,
+                          case.constraint=FALSE,
                           ...){     
 
   ##################################
@@ -170,7 +170,7 @@ loglik.odesim <- function(traj,
         
   ############################################################################
   ###                                                                      ###
-  ### Check if parameters are in bounds, and that total.size.constraint is ###
+  ### Check if parameters are in bounds, and that case.constraint is ###
   ###   within 10% of observed total (return -Inf if violated)             ###
   ###                                                                      ###  
   ############################################################################
@@ -185,7 +185,7 @@ loglik.odesim <- function(traj,
     
   ### check if conditions are met
   if(min(report.rate,nb.disp.new.cases,nb.disp.new.hosp,s2.hosp,s2.icu,s2.vent) < 0 | 
-    (total.size.constraint & tot.size.percent.off > 0.10)){ # changed to being greater than 0.1
+    (case.constraint & tot.size.percent.off > 0.10)){ # changed to being greater than 0.1
     
     # parameter out of bounds or total size constraint not met, return -Inf
     ll=-Inf

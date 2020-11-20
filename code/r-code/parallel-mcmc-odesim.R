@@ -56,7 +56,7 @@ multichain.mcmc.odesim <- function(n.chains,
             library(msm)
             ## functions for local use
             source(paste(inf.file.dir,"loglik.odesim.4.0.R",sep=""), chdir=TRUE)
-            source(paste(inf.file.dir,"mcmc.odesim.2.0.R",sep=""))
+            source(paste(inf.file.dir,"mcmc-odesim.2.0.R",sep=""))
             source(paste(inf.file.dir,"traj.from.params.R",sep=""))
             source(paste(inf.file.dir,"traj.process.R",sep=""))
             source(paste(inf.file.dir,"data.process.R",sep=""))
