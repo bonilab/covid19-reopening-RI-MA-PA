@@ -18,17 +18,70 @@
 extern FILE* OutFile;
 extern double* yic;
 extern prms* ppc;
+
+extern double G_C_COMM[NUMAC][NUMAC];
+
 extern double G_CLO_INTRODUCTION_TIME;
 extern int G_CLO_INTRODUCTION_COUNT;
+
+extern int G_CLO_FIRSTLOCKDOWN_ENDDAY;
+extern bool G_CLO_POSTLD_MIXING_SET;
 
 extern bool G_B_DIAGNOSTIC_MODE;
 extern bool G_B_CHECKPOP_MODE;
 extern bool G_B_REMOVE_99COLUMNS;
+extern bool G_B_BINARY_OUTPUT;
+
+extern double G_CLO_ICUFRAC_DEV;
+extern double G_CLO_ICUFRAC_DEV_SECONDPHASE;
+extern int G_CLO_BETTERCLINICALMANAGEMENT_BEGINDAY;
 
 extern int G_CLO_STEPS_PER_DAY;
 
 
 //  END  ### ### GLOBAL VARIABLES ### ###
+
+void write(double tt, double * yic, size_t dim)
+{
+    if( G_B_BINARY_OUTPUT){
+        write_bin(tt, yic, dim);
+        return;
+    }
+    int startcol = 0;
+    if( G_B_REMOVE_99COLUMNS ){ startcol=99; }
+
+    if( OutFile == NULL )
+    {
+        printf("%1.3f", tt);
+        for(int i=startcol; i<dim; i++) printf("\t%1.4f", yic[i]);
+        //for(i=0;i<NUMAC+3;i++) printf("\t%1.4f", yic[i]);
+        printf("\n");
+    }
+    else
+    {
+        fprintf(OutFile, "%1.3f", tt);
+        for(int i=startcol; i<dim; i++) fprintf(OutFile, "\t%1.4f", yic[i]);
+        //for(i=0;i<NUMAC+3;i++) printf("\t%1.4f", yic[i]);
+        fprintf(OutFile, "\n");
+    }
+}
+
+void write_bin(double tt, double * yic, size_t dim)
+{
+    int startcol = 0;
+    if( G_B_REMOVE_99COLUMNS ){ startcol=99; }
+
+    if( OutFile == NULL )
+    {
+        fwrite(&tt, sizeof(tt), 1, stdout);
+        fwrite(yic+startcol, sizeof(double), dim-startcol, stdout);
+    }
+    else
+    {
+        fwrite(&tt, sizeof(tt), 1, OutFile);
+        fwrite(yic+startcol, sizeof(double), dim-startcol, OutFile);
+    }
+}
 
 // [[Rcpp::export]]
 void generate_trajectories( double inital_number_of_cases, double param_beta, double t0, double tf, double h )
@@ -69,7 +122,10 @@ void generate_trajectories( double inital_number_of_cases, double param_beta, do
     
     int counter = 0;
     bool bIntroductionOccurred = false;
+    bool bContactRatesUpdatedAfterLockdown = false;
+    bool bPhase2BetterClinicalManagementBegun = false;
     double NextTimeForBetaUpdate=1000000.0; assert( tf < 999999.0 );
+    
     if( ppc->v_betatimes.size() > 1 )
     {
         NextTimeForBetaUpdate = ppc->v_betatimes[1];
@@ -89,6 +145,34 @@ void generate_trajectories( double inital_number_of_cases, double param_beta, do
             yic[STARTI+4]=((double)G_CLO_INTRODUCTION_COUNT); // some number of infected individuals in their forties are introduced 
             bIntroductionOccurred = true;
         }
+        
+        if( !bContactRatesUpdatedAfterLockdown && tt > G_CLO_FIRSTLOCKDOWN_ENDDAY )
+        {
+            for(int acs=0; acs<NUMAC; acs++) // age-class of the susceptible individual
+            {
+                for(int aci=0; aci<NUMAC; aci++) // age-class of the infected individual   
+                {
+                    G_C_COMM[acs][aci] = ppc->v_mixing_level_postld[acs] * ppc->v_mixing_level_postld[aci];
+                }
+            }        
+            
+            bContactRatesUpdatedAfterLockdown = true;
+        }
+
+        if( !bPhase2BetterClinicalManagementBegun && tt >= G_CLO_BETTERCLINICALMANAGEMENT_BEGINDAY )
+        {
+            for(int ac=0; ac<NUMAC; ac++)
+            {
+                ppc->v_prob_HA_CA[ac] *= (G_CLO_ICUFRAC_DEV_SECONDPHASE / G_CLO_ICUFRAC_DEV);
+            }            
+
+            bPhase2BetterClinicalManagementBegun = true;
+        }
+        
+        
+        
+        
+        
         
         // check if the hospitalization rates need to be updated (because we are out of the early period)
         /*if( ppc->earlymarch_highhosp_period )
@@ -114,20 +198,7 @@ void generate_trajectories( double inital_number_of_cases, double param_beta, do
 
         if( counter%steps_per_day==0 && !G_B_DIAGNOSTIC_MODE && !G_B_CHECKPOP_MODE && tt>49.5 )
         {
-            if( OutFile == NULL )
-            {
-                printf("%1.1f", tt);
-                for(i=startcol;i<dim;i++) printf("\t%1.1f", yic[i]);
-                //for(i=0;i<NUMAC+3;i++) printf("\t%1.4f", yic[i]);
-                printf("\n");
-            }
-            else
-            {
-                fprintf(OutFile, "%1.3f", tt);
-                for(i=startcol;i<dim;i++) fprintf(OutFile, "\t%1.4f", yic[i]);
-                //for(i=0;i<NUMAC+3;i++) printf("\t%1.4f", yic[i]);
-                fprintf(OutFile, "\n");
-            }
+            write(tt, yic, dim);
         }
         
         // ### BEGIN only enter block below if you're checking the total population size
@@ -150,20 +221,7 @@ void generate_trajectories( double inital_number_of_cases, double param_beta, do
     // print out results of the last step
     if( !G_B_DIAGNOSTIC_MODE && !G_B_CHECKPOP_MODE )
     {
-        if( OutFile == NULL )
-        {
-            printf("%1.1f", tt);
-            for(i=startcol;i<dim;i++) printf("\t%1.1f", yic[i]);
-            //for(i=0;i<NUMAC+3;i++) printf("\t%1.4f", yic[i]);
-            printf("\n");
-        }
-        else
-        {
-            fprintf(OutFile, "%1.3f", tt);
-            for(i=startcol;i<dim;i++) fprintf(OutFile, "\t%1.4f", yic[i]);
-            //for(i=0;i<NUMAC+3;i++) printf("\t%1.4f", yic[i]);
-            fprintf(OutFile, "\n");
-        }
+	write(tt, yic, dim);
     }
 
     if( G_B_CHECKPOP_MODE ) printf("\n\n");

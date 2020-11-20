@@ -72,6 +72,46 @@ void derivs( double t, double *y, double *dydt)
                                                                                     // positivity by virus-culture should be low by this time 
     }
 
+    double beta00;
+    double beta10;
+    double beta20;
+    double beta30;
+    double beta40; // this is the true beta (transmission and contact rate) experienced by 40-49 year-olds
+    double beta50; // this is the true beta (transmission and contact rate) experienced by 50-59 year-olds
+    double beta60; // this is the true beta (transmission and contact rate) experienced by 60-69 year-olds
+    double beta70; // this is the true beta (transmission and contact rate) experienced by 70-79 year-olds
+    double beta80; // this is the true beta (transmission and contact rate) experienced by 80-89 year-olds
+
+    
+    
+    // 
+    // in the lines below, if the current beta is too low, then reset the beta00 to beta80 values to a minimum
+    // acceptable level as these (older) age groups will not be able to have very little contact
+    //
+    if( (ppc->v[i_beta] / ppc->v[ i_prelockdown_beta ]) < ppc->v[ i_min_relbeta_00 ] )  beta00 = ppc->v[ i_min_relbeta_00 ] * ppc->v[ i_prelockdown_beta ];
+    else                                                                                beta00 = ppc->v[i_beta];
+    if( (ppc->v[i_beta] / ppc->v[ i_prelockdown_beta ]) < ppc->v[ i_min_relbeta_10 ] )  beta10 = ppc->v[ i_min_relbeta_10 ] * ppc->v[ i_prelockdown_beta ];
+    else                                                                                beta10 = ppc->v[i_beta];
+    if( (ppc->v[i_beta] / ppc->v[ i_prelockdown_beta ]) < ppc->v[ i_min_relbeta_20 ] )  beta20 = ppc->v[ i_min_relbeta_20 ] * ppc->v[ i_prelockdown_beta ];
+    else                                                                                beta20 = ppc->v[i_beta];
+    if( (ppc->v[i_beta] / ppc->v[ i_prelockdown_beta ]) < ppc->v[ i_min_relbeta_30 ] )  beta30 = ppc->v[ i_min_relbeta_30 ] * ppc->v[ i_prelockdown_beta ];
+    else                                                                                beta30 = ppc->v[i_beta];
+    if( (ppc->v[i_beta] / ppc->v[ i_prelockdown_beta ]) < ppc->v[ i_min_relbeta_40 ] )  beta40 = ppc->v[ i_min_relbeta_40 ] * ppc->v[ i_prelockdown_beta ];
+    else                                                                                beta40 = ppc->v[i_beta];
+    if( (ppc->v[i_beta] / ppc->v[ i_prelockdown_beta ]) < ppc->v[ i_min_relbeta_50 ] )  beta50 = ppc->v[ i_min_relbeta_50 ] * ppc->v[ i_prelockdown_beta ];
+    else                                                                                beta50 = ppc->v[i_beta];
+    if( (ppc->v[i_beta] / ppc->v[ i_prelockdown_beta ]) < ppc->v[ i_min_relbeta_60 ] )  beta60 = ppc->v[ i_min_relbeta_60 ] * ppc->v[ i_prelockdown_beta ];
+    else                                                                                beta60 = ppc->v[i_beta];
+    if( (ppc->v[i_beta] / ppc->v[ i_prelockdown_beta ]) < ppc->v[ i_min_relbeta_70 ] )  beta70 = ppc->v[ i_min_relbeta_70 ] * ppc->v[ i_prelockdown_beta ];
+    else                                                                                beta70 = ppc->v[i_beta];
+    if( (ppc->v[i_beta] / ppc->v[ i_prelockdown_beta ]) < ppc->v[ i_min_relbeta_80 ] )  beta80 = ppc->v[ i_min_relbeta_80 ] * ppc->v[ i_prelockdown_beta ];
+    else                                                                                beta80 = ppc->v[i_beta];
+
+
+
+    
+
+    
     if( G_B_USESOCIALCONTACTMATRIX )
     {
         for(onac=0; onac<NUMAC; onac++) // force of infection ON a particular age class
@@ -82,7 +122,17 @@ void derivs( double t, double *y, double *dydt)
             {
                 for(byac=0; byac<NUMAC; byac++) // infection BY a particular age class
                 {
-                    foi_ofcomm[onac] += ppc->v[i_beta] * ppc->v[i_phi_incub] * G_C_COMM[onac][byac] * y[STARTE + i*NUMAC + byac];   
+                    //if(onac<4)  foi_ofcomm[onac] += ppc->v[i_beta] * ppc->v[i_phi_incub] * G_C_COMM[onac][byac] * y[STARTE + i*NUMAC + byac];
+                    if(onac==0) foi_ofcomm[onac] +=         beta00 * ppc->v[i_phi_incub] * G_C_COMM[onac][byac] * y[STARTE + i*NUMAC + byac];
+                    if(onac==1) foi_ofcomm[onac] +=         beta10 * ppc->v[i_phi_incub] * G_C_COMM[onac][byac] * y[STARTE + i*NUMAC + byac];
+                    if(onac==2) foi_ofcomm[onac] +=         beta20 * ppc->v[i_phi_incub] * G_C_COMM[onac][byac] * y[STARTE + i*NUMAC + byac];
+                    if(onac==3) foi_ofcomm[onac] +=         beta30 * ppc->v[i_phi_incub] * G_C_COMM[onac][byac] * y[STARTE + i*NUMAC + byac];
+                    if(onac==4) foi_ofcomm[onac] +=         beta40 * ppc->v[i_phi_incub] * G_C_COMM[onac][byac] * y[STARTE + i*NUMAC + byac];
+                    if(onac==5) foi_ofcomm[onac] +=         beta50 * ppc->v[i_phi_incub] * G_C_COMM[onac][byac] * y[STARTE + i*NUMAC + byac];
+                    if(onac==6) foi_ofcomm[onac] +=         beta60 * ppc->v[i_phi_incub] * G_C_COMM[onac][byac] * y[STARTE + i*NUMAC + byac];
+                    if(onac==7) foi_ofcomm[onac] +=         beta70 * ppc->v[i_phi_incub] * G_C_COMM[onac][byac] * y[STARTE + i*NUMAC + byac];   
+                    if(onac==8) foi_ofcomm[onac] +=         beta80 * ppc->v[i_phi_incub] * G_C_COMM[onac][byac] * y[STARTE + i*NUMAC + byac];   
+                    
                 }
             }
             
@@ -91,7 +141,16 @@ void derivs( double t, double *y, double *dydt)
             {
                 for(byac=0; byac<NUMAC; byac++) // infection BY a particular age class
                 {
-                    foi_ofcomm[onac] += ppc->v[i_beta] * ppc->v[i_phi_asymp] * G_C_COMM[onac][byac] * y[STARTA + i*NUMAC + byac];   
+                    //if(onac<4)  foi_ofcomm[onac] += ppc->v[i_beta] * ppc->v[i_phi_asymp] * G_C_COMM[onac][byac] * y[STARTA + i*NUMAC + byac];   
+                    if(onac==0) foi_ofcomm[onac] +=         beta00 * ppc->v[i_phi_asymp] * G_C_COMM[onac][byac] * y[STARTA + i*NUMAC + byac];
+                    if(onac==1) foi_ofcomm[onac] +=         beta10 * ppc->v[i_phi_asymp] * G_C_COMM[onac][byac] * y[STARTA + i*NUMAC + byac];
+                    if(onac==2) foi_ofcomm[onac] +=         beta20 * ppc->v[i_phi_asymp] * G_C_COMM[onac][byac] * y[STARTA + i*NUMAC + byac];
+                    if(onac==3) foi_ofcomm[onac] +=         beta30 * ppc->v[i_phi_asymp] * G_C_COMM[onac][byac] * y[STARTA + i*NUMAC + byac];
+                    if(onac==4) foi_ofcomm[onac] +=         beta40 * ppc->v[i_phi_asymp] * G_C_COMM[onac][byac] * y[STARTA + i*NUMAC + byac];
+                    if(onac==5) foi_ofcomm[onac] +=         beta50 * ppc->v[i_phi_asymp] * G_C_COMM[onac][byac] * y[STARTA + i*NUMAC + byac];   
+                    if(onac==6) foi_ofcomm[onac] +=         beta60 * ppc->v[i_phi_asymp] * G_C_COMM[onac][byac] * y[STARTA + i*NUMAC + byac];   
+                    if(onac==7) foi_ofcomm[onac] +=         beta70 * ppc->v[i_phi_asymp] * G_C_COMM[onac][byac] * y[STARTA + i*NUMAC + byac];   
+                    if(onac==8) foi_ofcomm[onac] +=         beta80 * ppc->v[i_phi_asymp] * G_C_COMM[onac][byac] * y[STARTA + i*NUMAC + byac];   
                 }
             }
             
@@ -100,7 +159,16 @@ void derivs( double t, double *y, double *dydt)
             {
                 for(byac=0; byac<NUMAC; byac++) // infection BY a particular age class - there is no phi-parameter because it is 1.0 here (this is the reference class for infectivity)
                 {
-                    foi_ofcomm[onac] += ppc->v[i_selfisolation_factor] * ppc->v[i_beta] * G_C_COMM[onac][byac] * y[STARTI + i*NUMAC + byac];   
+                    //if(onac<4)  foi_ofcomm[onac] += ppc->v[i_selfisolation_factor] * ppc->v[i_beta] * G_C_COMM[onac][byac] * y[STARTI + i*NUMAC + byac];
+                    if(onac==0) foi_ofcomm[onac] += ppc->v[i_selfisolation_factor] *         beta00 * G_C_COMM[onac][byac] * y[STARTI + i*NUMAC + byac];
+                    if(onac==1) foi_ofcomm[onac] += ppc->v[i_selfisolation_factor] *         beta10 * G_C_COMM[onac][byac] * y[STARTI + i*NUMAC + byac];
+                    if(onac==2) foi_ofcomm[onac] += ppc->v[i_selfisolation_factor] *         beta20 * G_C_COMM[onac][byac] * y[STARTI + i*NUMAC + byac];
+                    if(onac==3) foi_ofcomm[onac] += ppc->v[i_selfisolation_factor] *         beta30 * G_C_COMM[onac][byac] * y[STARTI + i*NUMAC + byac];
+                    if(onac==4) foi_ofcomm[onac] += ppc->v[i_selfisolation_factor] *         beta40 * G_C_COMM[onac][byac] * y[STARTI + i*NUMAC + byac];
+                    if(onac==5) foi_ofcomm[onac] += ppc->v[i_selfisolation_factor] *         beta50 * G_C_COMM[onac][byac] * y[STARTI + i*NUMAC + byac];   
+                    if(onac==6) foi_ofcomm[onac] += ppc->v[i_selfisolation_factor] *         beta60 * G_C_COMM[onac][byac] * y[STARTI + i*NUMAC + byac];   
+                    if(onac==7) foi_ofcomm[onac] += ppc->v[i_selfisolation_factor] *         beta70 * G_C_COMM[onac][byac] * y[STARTI + i*NUMAC + byac];   
+                    if(onac==8) foi_ofcomm[onac] += ppc->v[i_selfisolation_factor] *         beta80 * G_C_COMM[onac][byac] * y[STARTI + i*NUMAC + byac];   
                 }
             }
 
@@ -146,6 +214,7 @@ void derivs( double t, double *y, double *dydt)
             }
             
         }
+        
     }    
 
     
@@ -170,7 +239,7 @@ void derivs( double t, double *y, double *dydt)
     
     // this is the transition rate among the V-classes ... each stage is about 1.8 days
     // meaning you have about 10.8 days on a ventilator in the 6 V classes
-    //double trv = 1.0 / 1.8;
+    // double trv = 1.0 / 1.8;
     double trv = 1.0 / ( (ppc->v[i_mean_time_vent]/6.0) );
     
     double trhr = 0.4;          // NOTE BethG says this should be about 2-3 days.
@@ -230,7 +299,7 @@ void derivs( double t, double *y, double *dydt)
             {
                 if(i==0) // meaning this is the E_1 class and the S-classes have to flow into it
                 {
-                    dydt[STARTE + i*NUMAC + ac] = ( foi_ofcomm[ac] + foi_ofhosp[ac] ) * y[ac] / popsize - tre * y[STARTE + i*NUMAC + ac];
+                    dydt[STARTE + i*NUMAC + ac] = ppc->v_rel_susc[ac] * ( foi_ofcomm[ac] + foi_ofhosp[ac] ) * y[ac] / popsize - tre * y[STARTE + i*NUMAC + ac];
                 }
                 else // these are the classes E_2 and higher
                 {
@@ -380,8 +449,7 @@ void derivs( double t, double *y, double *dydt)
     {
         for(ac=0;ac<NUMAC;ac++)
         {
-            dydt[STARTHR + ac] = trcr * y[STARTCR + ac]  + (1.0-ppc->v_prob_CA_V[ac]-ppc->v_prob_CA_D[ac]) * trca * y[STARTCA + ac] - trhr * y[STARTHR + ac]; 
-            //TODO need to account for death here, some CRs won't enter here but will die
+            dydt[STARTHR + ac] = (1.0-ppc->v_prob_CR_D[ac]) * trcr * y[STARTCR + ac]  + (1.0-ppc->v_prob_CA_V[ac]-ppc->v_prob_CA_D[ac]) * trca * y[STARTCA + ac] - trhr * y[STARTHR + ac]; 
         }
     }
     
@@ -396,7 +464,7 @@ void derivs( double t, double *y, double *dydt)
 
     
     
-    // ### 11 ###    DEAD INDIVIDUALS (DHOSP) WHO DIED IN THE HOSPITAL - TODO need to allow for death of CR individuals
+    // ### 11 ###    DEAD INDIVIDUALS (DHOSP) WHO DIED IN THE HOSPITAL - 
     //
     for(ac=0;ac<NUMAC;ac++)
     {
@@ -411,7 +479,8 @@ void derivs( double t, double *y, double *dydt)
 
         // add HA-individuals coming from HA4 
         dydt[STARTDHOSP + ac] += ppc->v_prob_HA4_D[ac] * trha * y[STARTHA + (NUMHA-1)*NUMAC + ac]; 
-        // add HR-individuals coming from HR 
+        
+        // add HR-individuals coming from HR; same death rate as HA4
         dydt[STARTDHOSP + ac] += ppc->v_prob_HA4_D[ac] * trhr * y[STARTHR + ac]; 
 
         // add CA-individuals coming from CA 
@@ -419,6 +488,9 @@ void derivs( double t, double *y, double *dydt)
         
         // add in V-individuals who will die (just V4 for now)
         dydt[STARTDHOSP + ac] += trv * ppc->v_prob_V_D[ac] * y[STARTV + VK*NUMAC + ac];
+
+        // add CR-individuals coming from CR 
+        dydt[STARTDHOSP + ac] += ppc->v_prob_CR_D[ac] * trcr * y[STARTCR + ac]; 
     }
 
     

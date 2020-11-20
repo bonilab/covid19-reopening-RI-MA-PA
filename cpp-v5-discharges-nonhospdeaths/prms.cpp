@@ -14,6 +14,8 @@ prms::prms()
     assert( v.size()==num_params );
     
     v_rel_susc.insert( v_rel_susc.begin(), NUMAC, 0.0 );
+    v_mixing_level.insert( v_mixing_level.begin(), NUMAC, 0.0 );
+    v_mixing_level_postld.insert( v_mixing_level_postld.begin(), NUMAC, 0.0 );
     v_prob_E_A.insert( v_prob_E_A.begin(), NUMAC, 0.0 );
     v_prob_I2_H.insert(  v_prob_I2_H.begin(),  NUMAC, 0.0 );
     v_prob_I4_D.insert(  v_prob_I4_D.begin(),  NUMAC, 0.0 );
@@ -21,9 +23,12 @@ prms::prms()
     v_prob_HA_CA.insert( v_prob_HA_CA.begin(), NUMAC, 0.0 );
     v_prob_V_D.insert( v_prob_V_D.begin(), NUMAC, 0.0 );
     v_prob_CA_D.insert( v_prob_CA_D.begin(), NUMAC, 0.0 );
+    v_prob_CR_D.insert( v_prob_CR_D.begin(), NUMAC, 0.0 );
     v_prob_CA_V.insert( v_prob_CA_V.begin(), NUMAC, 0.0 );
     
-    assert( v_rel_susc.size()==NUMAC );    
+    assert( v_rel_susc.size()==NUMAC );  
+    assert( v_mixing_level.size()==NUMAC );  
+    assert( v_mixing_level_postld.size()==NUMAC );  
     assert( v_prob_E_A.size()==NUMAC );
     assert( v_prob_I2_H.size() ==NUMAC );
     assert( v_prob_I4_D.size() ==NUMAC );
@@ -31,6 +36,7 @@ prms::prms()
     assert( v_prob_HA_CA.size()==NUMAC );
     assert( v_prob_V_D.size()==NUMAC );
     assert( v_prob_CA_D.size()==NUMAC );
+    assert( v_prob_CR_D.size()==NUMAC );
     assert( v_prob_CA_V.size()==NUMAC );
     
     v_betas.clear();
