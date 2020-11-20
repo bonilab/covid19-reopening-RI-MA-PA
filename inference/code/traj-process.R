@@ -1,4 +1,25 @@
-traj.process <- function(traj,loc="RI",odesim.version="v4"){
+#!/usr/bin/env Rscript
+
+# mcmc-odesim.R
+# authors: Ephraim Hanks, Nathan Wikle, Emily Strong
+# last edited: 20 Nov 2020 
+#
+# This function (traj.process) takes output from odesim and returns a more 
+#   interpretable list of outputs, which better match the available data.
+
+traj.process <- function(traj, loc = "RI", odesim.version = "v5"){
+  # Input:
+  #   traj: odesim trajectories generated from 'traj.from.params'
+  #   loc: US state ("RI" (default), "MA", "PA")
+  #   odesim.version: version of odesim used for trajectories (default = "v5")
+  # Output:
+  #   Named list with the following objects:
+  #     days, tot.sympt.new, tot.hosp.new, hosp.new, deaths.new, hosp.deaths.new, 
+  #     home.deaths.new, tot.hosp.curr.noicu, tot.icu.curr.novent, tot.vent.curr, 
+  #     tot.hosp.curr, tot.icu.curr, tot.deaths.new, tot.hosp.deaths.new,
+  #     tot.home.deaths.new, tot.deaths.cum, deaths.cum, tot.hosp.discharges.new    
+
+
     if(odesim.version=="v4"){
         sympt.cum.idx=272:280
         hosp.cum.idx=281:289

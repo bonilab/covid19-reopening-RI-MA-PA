@@ -12,12 +12,16 @@
 data.process <- function(df, loc = "RI"){
   # Input
   #   df: data frame object
-  #   loc: US state of interest ("RI" (default), "MA", "PA")
+  #   loc: US state ("RI" (default), "MA", "PA")
   # Output
   #   Named list with the following objects:
-  #     days, cases.cum, cases.new, cases.age.new,
-  #     hosp.cum, hosp.new, hosp.age.new, hosp.curr,
-  #     icu.curr, vent.curr, deaths.cum, deaths.new
+  #     days, tot.sympt.new, sympt.new, tot.hosp.new, hosp.new, tot.hosp.curr,
+  #     tot.icu.curr, tot.vent.curr, tot.deaths.new, tot.hosp.deaths.new, 
+  #     tot.home.deaths.new, deaths.cum, tot.deaths.cum, tot.hosp.discharges.new, 
+  #     tests.as, pos.as, age.obs.times, age.new.cases, age.hosp.obs.times,
+  #     age.hosp.new, age.deaths.obs.times, age.deaths.new, hosp.deaths.obs,
+  #     hosp.deaths.new, c.t
+
  
   days <- df$daynum # days after Jan 1, 2020
  
