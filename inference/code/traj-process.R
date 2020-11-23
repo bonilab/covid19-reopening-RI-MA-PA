@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# mcmc-odesim.R
+# traj-process.R
 # authors: Ephraim Hanks, Nathan Wikle, Emily Strong
 # last edited: 20 Nov 2020 
 #

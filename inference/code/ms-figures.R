@@ -1,18 +1,49 @@
-### ms-figures.R
-### Nathan Wikle
-###
-### Generates Figures 2, (part of) 4, and 5 for manuscript and supplementary 
-###   material, using CSV output from state-level runs. CAUTION: some 
-###   state-level params are hard-coded into 'fig2panel'. These were current
-###   for Sept 6 runs, as of 12 Oct 2020. They may need to be updated for 
-###   future runs.
+#!/usr/bin/env Rscript
+
+# ms-figures.R
+# authors: Nathan Wikle
+# last edited: 23 Nov 2020 
+#
+# Generates Figures 2, (part of) 4, and 5 for manuscript and supplementary 
+#   material, using CSV output from state-level runs. CAUTION: some 
+#   state-level params are hard-coded into 'fig2panel'. These were current
+#   for Sept 6 runs, as of 12 Oct 2020. They may need to be updated for 
+#   future runs.
+
 
 
 fig2panel <- function(beta.directory, ode.directory, data.directory, odepath, 
                       loc, const, plot.name, alpha, subsample = NA, 
                       axis.size = 1.75, lab.size = 1.75,
-                      ncol = 2, nrow = 4, height = 12, width = 12, png.true = F,
+                      ncol = 2, nrow = 4, height = 12, width = 12, 
                       font.family = "Helvetica"){
+  # Input: 
+  #   beta.directory: location of csv containing contact rate parameters
+  #   ode.directory: location of csv containing odesim parameters
+  #   data.directory: location of state-level covid data
+  #   odepath: location of ODESIM program
+  #   loc: state considered in analysis ("RI", "PA", "MA")
+  #   const: vector of constant ODESIM values used in model fit
+  #   plot.name: name for plot output
+  #   alpha: transparency of trajectory lines (between 1 and 350)
+  #   subsample: number of samples to use in plots (between 1 and 1000, default = NA)
+  #   axis.size: size of plot axes (default = 1.75)
+  #   lab.size: size of plot labels (default = 1.75)
+  #   ncol: number of columns (for plot, default = 2)
+  #   nrow: number of rows (for plot, default = 4)
+  #   height: height of plot pdf (default = 12)
+  #   width: width of plot pdf (default = 12)
+  #   font.family: type of font used in plot generation (default = "Helvetica")
+  # Output: 
+  #   Creates Figure 2 from the manuscript, with panels showing:
+  #     A) new symptomatic cases 
+  #     B) new hospitalizations
+  #     C) current hospitalizations
+  #     D) current ICU occupancy
+  #     E) current ventilator occupancy
+  #     F) new deathsnew 
+  #     G) new hospital deaths
+  #     H) new hospital discharges
   
   
   ### make samples data structure for traj.sim
@@ -182,17 +213,9 @@ fig2panel <- function(beta.directory, ode.directory, data.directory, odepath,
   # last day of simulated output
   end.day <- max(samples$days)
 
-  # save plots as pdf
-  if (png.true){
-    png(filename = plot.name,
-        family = font.family, 
-        width = width, 
-        height = height, 
-        units = "in",
-        res = 100)
-  } else {
-    pdf(file = plot.name, family = font.family, h = height, w = width)
-  }
+
+  pdf(file = plot.name, family = font.family, h = height, w = width)
+  
   # grid of plots
   par(mfrow = c(nrow,ncol))
   par(mar = c(3, 2, 1, 1), oma = c(2, 2, 0.5, 0.5))
@@ -518,6 +541,23 @@ fig4 <- function(beta.directory, ode.directory, data.directory, odepath,
                  legend.size = 12, legend.title.size = 14,
                  height = 4, width = 5,
                  font.family = "Helvetica"){
+  # Input: 
+  #   beta.directory: location of csv containing contact rate parameters
+  #   ode.directory: location of csv containing odesim parameters
+  #   data.directory: location of state-level covid data
+  #   odepath: location of ODESIM program
+  #   loc: state considered in analysis ("RI", "PA", "MA")
+  #   const: vector of constant ODESIM values used in model fit
+  #   plot.name: name for plot output
+  #   subsample: number of samples to use in plots (between 1 and 1000, default = NA)
+  #   axis.size: size of plot axes (default = 12)
+  #   title.size: size of plot title (default = 14)
+  #   height: height of plot pdf (default = 4)
+  #   width: width of plot pdf (default = 5)
+  #   font.family: type of font used in plot generation (default = "Helvetica")
+  # Output: 
+  #   Creates plots similar to Figure 4(b), showing contact-rate parameters during
+  #     and after lockdown. 
   
   ### make samples data structure for traj.sim
   
@@ -749,7 +789,7 @@ fig4 <- function(beta.directory, ode.directory, data.directory, odepath,
     theme(legend.text=element_text(size = legend.size),
           legend.title=element_text(size = legend.title.size, face="bold"),
           legend.background=element_blank()) + 
-    theme(text = element_text(family="Ubuntu Mono")) 
+    theme(text = element_text(family=font.family)) 
     
     # save plot
     save_plot(plot.name,
@@ -769,7 +809,31 @@ fig5panel <- function(ri.beta, ri.ode, ri.data, ri.const,
                       axis.size = 1, lab.size = 1,
                       height = 16, width = 11, logplot = F,
                       font.family = "Helvetica"){
-  
+  # Input: 
+  #   ri.beta, ri.ode, ri.data, ri.const: locations of csvs containing RI contact rate 
+  #     parameters (ri.beta), odesim parameters (ri.ode), covid data (ri.data), and
+  #     vector of constant odesim input (ri.const).
+  #   pa.beta, pa.ode, pa.data, pa.const: PA csv locations
+  #   ma.beta, ma.ode, ma.data, ma.const: MA csv locations
+  #   odepath: location of ODESIM program
+  #   plot.name: name for plot output
+  #   alpha: transparency of trajectory lines (between 1 and 350)
+  #   subsample: number of samples to use in plots (between 1 and 1000, default = NA)
+  #   axis.size: size of plot axes (default = 1)
+  #   lab.size: size of plot labels (default = 1)
+  #   height: height of plot pdf (default = 16)
+  #   width: width of plot pdf (default = 11)
+  #   logplot: determines if hosp.frac params are plotted on log-scale (default = F)
+  #   font.family: type of font used in plot generation (default = "Helvetica")
+  # Output: 
+  #   Creates Figure 5 from the manuscript. This includes
+  #     A) trajectories of the symptomatic reporting rate over time
+  #     B) histograms of length of hospital stay
+  #     C) hist. of probability of dying at home
+  #     D) hist. of ICU admissions prob.
+  #     E) CIs of prob. of hospitalization
+
+
   ### make samples data structure for traj.sim
   
   ### Rhode Island ###
@@ -1781,6 +1845,37 @@ fig5panel <- function(ri.beta, ri.ode, ri.data, ri.const,
 
 }
 
+histFig <- function(ode, nr = 6, nc = 6, plot.name, 
+                    font.family = "Ubuntu Mono", height = 16, width = 16){
+  # Input: 
+  #   ode: data frame of ODESIM parameter samples
+  #   nr: number of rows (default = 6)
+  #   nc: number of columns (default = 6)
+  #   plot.name: name of plot 
+  #   font.family: type of font (default = "Ubuntu Mono")
+  #   height: height of pdf (default = 16)
+  #   width: width of pdf (default = 16)
+  # Output: 
+  #   Creates histograms of all ODESIM posteriors, found in supp. materials.
+
+  pdf(file = plot.name, family = font.family, h = height, w = width)
+  
+  # grid of plots
+  par(mfrow = c(nr,nc))
+  par(mar = c(3, 2, 3, 2), oma = c(2, 2, 4, 2))
+  
+  for (i in 1:ncol(ode)){
+    hist(ode[,i], main = "", xlab = "", ylab = "", col = i)
+    title(colnames(ode)[i], adj = 0,
+          line = 1, cex.main = 1.75)
+  }
+  
+  title("Rhode Island", outer = T, adj = 0, line = 1, cex.main = 4)
+  
+  dev.off()
+  embed_fonts(plot.name, outfile = plot.name)
+}
+
 ### Functions used to determine (100 * alpha)% HPD interval, using the 
 ###   kernel density estimate for a given set of posterior samples.
 ###   Portions of this code (highest_alpha and as.pdf) represent slightly
@@ -2146,6 +2241,9 @@ paramSummary <- function(beta.directory, ode.directory, data.directory,
               rr = rr.summary))
 }
 
+###########################################################################################
+###### CREATE FIGURES FOR MANUSCRIPT 
+###########################################################################################
 
 
 ###
@@ -2155,13 +2253,13 @@ paramSummary <- function(beta.directory, ode.directory, data.directory,
 OPT_USE_PY_LL=FALSE
 
 
-source("./plot.chains.R")
-source("./data.process.R")
-source("./traj.process.R")
-source("./traj.from.params.R")
-source("./loglik.odesim.4.0.R", chdir = TRUE)
-source("./results.plots.and.params.R")
-source("./fancy-plots.R")
+# source("./plot-chains.R")
+source("./data-process.R")
+source("./traj-process.R")
+source("./traj-from-params.R")
+source("./loglik-odesim.R", chdir = TRUE)
+source("./chains-histograms.R")
+source("./results-plots.R")
 
 # register fonts with R's pdf output device
 library('extrafont')
@@ -2322,38 +2420,8 @@ fig5panel(ri.beta = "../../final_outputs_for_ms/pre-print/RI/RI_bestfit-results.
           font.family = "Ubuntu Mono")
 
 
-ri.ode = "../../final_outputs_for_ms/pre-print/RI/RI_bestfit-results.ode.params-day-250.csv"
-ode <- read.csv(ri.ode)
-
-histFig(ode = ode[,1:36],
-  nr = 6,
-  nc = 6,
-  plot.name = "test.pdf",
-  font.family = "Ubuntu Mono",
-  height = 16,
-  width = 16)
 
 
-histFig <- function(ode, nr = 6, nc = 6, plot.name, 
-                    font.family = "Ubuntu Mono", height = 16, width = 16){
-  
-  pdf(file = plot.name, family = font.family, h = height, w = width)
-  
-  # grid of plots
-  par(mfrow = c(nr,nc))
-  par(mar = c(3, 2, 3, 2), oma = c(2, 2, 4, 2))
-  
-  for (i in 1:ncol(ode)){
-    hist(ode[,i], main = "", xlab = "", ylab = "", col = i)
-    title(colnames(ode)[i], adj = 0,
-          line = 1, cex.main = 1.75)
-  }
-  
-  title("Rhode Island", outer = T, adj = 0, line = 1, cex.main = 4)
-  
-  dev.off()
-  embed_fonts(plot.name, outfile = plot.name)
-}
 
 
 

@@ -1,22 +1,37 @@
+#!/usr/bin/env Rscript
+
+# traj-from-params.R
+# authors: Ephraim Hanks, Nathan Wikle, Emily Strong
+# last edited: 20 Nov 2020 
+#
+# This function (traj.from.params) serves as a wrapper function of ODESIM, taking 
+#   parameter inputs from R and parsing them to ODESIM, which then returns
+#   a large matrix of output.
+
 
 traj.from.params <- function(beta,
                              params = NULL,
                              const.params = NULL,
-                             non.odesim.params=NULL,
+                             non.odesim.params = NULL,
                              introday = NULL,
                              tf,
                              odepath,
-                             loc="RI",
-                             symp = NULL
-                             ){
-  # A function that takes beta values as input and calls the odesim program.
+                             loc = "RI",
+                             symp = NULL){
+  # A function that takes beta/odesim param values as input and calls the odesim program.
   #   Input:
-  #       1) beta: vector of beta values used in the sim
-  #               should be a vector of length tf-60, with one value per day
-  #       2) tf: integer day to stop sim (1 = 20200101)
-  #       3) t0=jan 1, 2020
+  #       1) beta: vector of beta (contact rate) values used in the sim,
+  #               should be a vector of daily values.
+  #       2) params: vector of fitted odesim params
+  #       3) const.params: vector of constant odesim params
+  #       4) non.odesim.params: vector of non-odesim params (eg, hosp.report.rate)
+  #       5) introday: day of first infected
+  #       6) tf: integer day to stop sim (day 1 = 2020-01-01)
+  #       7) odepath: path to "odesim"
+  #       8) loc: US state ("RI" (default), "MA", "PA")
+  #       9) symp: symp-frac parameter (only used when sf.choice = T in mcmc.odesim)
   #   Output:
-  #       Data frame with times column and DeltaJ (simulated cases) column
+  #       Data frame of ODESIM output (307 columns, see odesim documentation for details).
 
 
     ##

@@ -1,10 +1,11 @@
 #!/usr/bin/env Rscript
 
-##
-## example use
-##
-## plot.chains("./",nrow.plots=3,ncol.plots=5,pdf.plot=TRUE,pdf.name="chains.pdf")
-## results.plots.and.params("./",name="MAtoday",loc="MA",odesim.version="v5",burnin=20000)
+# chains-histograms.R
+# authors: Ephraim Hanks, Nathan Wikle, Emily Strong
+# last edited: 23 Nov 2020 
+#
+# Defines function (results.plots.and.params) which creates trace plots
+#   and histograms of parameters from the fitted model.
 
 results.plots.and.params = function(out.folder,
                                     loc="RI",
@@ -17,6 +18,20 @@ results.plots.and.params = function(out.folder,
                                     const.params=NULL,
                                     lik.hosp.discharges=FALSE,
                                     active.surv=FALSE){
+  # Input: 
+  #   out.folder: 
+  #   odesim.version:
+  #   burnin:
+  #   name: 
+  #   readme: 
+  #   odepath: 
+  #   non.odesim.params:  
+  #   const.params: 
+  #   lik.hosp.discharges: 
+  #   active.surv: 
+  # Output: 
+  # 
+
   ##
   ## Function to produce uniform plots of output
   ## 

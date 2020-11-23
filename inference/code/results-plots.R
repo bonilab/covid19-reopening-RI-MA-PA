@@ -1,8 +1,11 @@
+#!/usr/bin/env Rscript
 
-### fancy-plots.R
-### Nathan Wikle
-###
-### Function to generate output plots with more detailed fits to data.
+# results-plots.R
+# authors: Nathan Wikle
+# last edited: 23 Nov 2020 
+#
+# Function to generate output plots from fitted model, with 
+#   multiple comparisons of fit to the data.
 
 library(ggplot2)
 library(stringr)
