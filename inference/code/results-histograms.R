@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# chains-histograms.R
+# results-histograms.R
 # authors: Ephraim Hanks, Nathan Wikle, Emily Strong
 # last edited: 23 Nov 2020 
 #
@@ -8,29 +8,30 @@
 #   and histograms of parameters from the fitted model.
 
 results.plots.and.params = function(out.folder,
-                                    loc="RI",
-                                    odesim.version="v5",
-                                    burnin=1,
-                                    name="output",
-                                    readme=TRUE,
-                                    odepath="../../",
-                                    non.odesim.params=NULL,
-                                    const.params=NULL,
-                                    lik.hosp.discharges=FALSE,
-                                    active.surv=FALSE){
+                                    loc = "RI",
+                                    odesim.version = "v5",
+                                    burnin = 1,
+                                    name = "output",
+                                    readme = TRUE,
+                                    odepath = "../../",
+                                    non.odesim.params = NULL,
+                                    const.params = NULL,
+                                    lik.hosp.discharges = FALSE,
+                                    active.surv = FALSE){
   # Input: 
-  #   out.folder: 
-  #   odesim.version:
-  #   burnin:
-  #   name: 
-  #   readme: 
-  #   odepath: 
-  #   non.odesim.params:  
-  #   const.params: 
-  #   lik.hosp.discharges: 
-  #   active.surv: 
+  #   out.folder: folder with .Rdata output from mcmc.odesim
+  #   loc: US state used for analysis ("RI" (default), "MA", "PA")
+  #   odesim.version: version of ODESIM (default = "v5")
+  #   burnin: amount of burnin before compiling results (default = 1)
+  #   name: file name for pdf output
+  #   readme: whether to create a README file (default = TRUE)
+  #   odepath: location of ODESIM
+  #   non.odesim.params:  vector of constant non-ODESIM parameters
+  #   const.params: vector of constant ODESIM parameters
+  #   lik.hosp.discharges: if hospital discharges were included in the likelihood (default = FALSE)
+  #   active.surv: was the active surveillance data used? (default = FALSE)
   # Output: 
-  # 
+  #   Plots of posterior trajectories and histograms, along with 
 
   ##
   ## Function to produce uniform plots of output
