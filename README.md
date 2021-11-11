@@ -1,4 +1,4 @@
-# Public repository for the Boni modeling group's paper on the SARS-CoV-2 epidemic after reopening in RI, MA, and PA.
+# Public repository for the Boni modeling group's paper, "SARS-CoV-2 epidemic after social and economic reopening in three US states reveals shifts in age structure and clinical characteristics."
 *Authors: Nathan B. Wikle, Thu Nguyen-Anh Tran, Ephraim M Hanks, Maciej F Boni (and 12 others)*
 
 This repository contains source code and additional supplementary materials from our manuscript, "SARS-CoV-2 epidemic after social and economic reopening in three US states reveals shifts in age structure and clinical characteristics." 
