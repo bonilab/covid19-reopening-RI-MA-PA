@@ -9,9 +9,18 @@ The following instructions provide details on how to run the source code underly
 
 ### R 
 
-The code has been tested with R version 4.0.1, "See Things Now."  The following R packages must be installed before the code will run successfully:
+The code has been tested with R version 3.6.0 (2019-04-26) -- "Planting of a Tree."  The following R packages must be installed before the code will run successfully:
 
-- `Matrix` (v. ?)
+- `mc2d` (0.1.18)
+- `mvtnorm` (1.1.1)
+- `readxl` (1.3.1)
+- `fda` (5.1.9)
+- `snow` (0.4.3)
+- `doParallel` (1.0.16)
+- `foreach` (1.5.1)
+- `msm` (1.6.8)
+- `splines2` (0.4.1)
+- `reticulate` (1.18)
 
 ### C
 
