@@ -9,7 +9,7 @@ The following instructions provide details on how to run the source code underly
 
 ### R 
 
-The code has been tested with R version 3.6.0 (2019-04-26) -- "Planting of a Tree."  The following R packages must be installed before the code will run successfully:
+The code has been tested with R version 3.6.0 (2019-04-26) -- "Planting of a Tree."  The following R packages (version number in parentheses) must be installed before the code will run successfully:
 
 - `mc2d` (0.1.18)
 - `mvtnorm` (1.1.1)
