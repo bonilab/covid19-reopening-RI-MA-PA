@@ -204,7 +204,7 @@ fit <- multichain.mcmc.odesim(
   odesim.ver = "v5",
   start.day = 61,
   end.day = max(pa.data$daynum, na.rm = TRUE) + 1,  
-  introday = 55, 
+  introday = 60, 
   thin.rt = 10, 
   plot.save = FALSE, 
   # Likelihood specification #
