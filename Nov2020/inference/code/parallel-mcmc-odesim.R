@@ -4,7 +4,8 @@
 # authors: Ephraim Hanks, Nathan Wikle, Emily Strong
 # last edited: 20 Nov 2020 
 #
-# 
+# Defines function (multichain.mcmc.odesim) used to call initialize
+#   multiple MCMC chains to run in parallel.
 
 
 multichain.mcmc.odesim <- function(

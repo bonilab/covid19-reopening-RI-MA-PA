@@ -10,8 +10,6 @@
 #   for Sept 6 runs, as of 12 Oct 2020. They may need to be updated for 
 #   future runs.
 
-
-
 fig2panel <- function(beta.directory, ode.directory, data.directory, odepath, 
                       loc, const, plot.name, alpha, subsample = NA, 
                       axis.size = 1.75, lab.size = 1.75,
@@ -2258,7 +2256,7 @@ source("./data-process.R")
 source("./traj-process.R")
 source("./traj-from-params.R")
 source("./loglik-odesim.R", chdir = TRUE)
-source("./chains-histograms.R")
+source("./results-histograms.R")
 source("./results-plots.R")
 
 # register fonts with R's pdf output device

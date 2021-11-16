@@ -4,6 +4,7 @@
 ### last edited: 12 Nov 2021
 ### authors: Ephraim Hanks, Nathan Wikle
 
+
 ### Set up an MCMC sampler for our mechanistic model of SARS-CoV-2 in Rhode Island,
 ###   Massachusetts, or Pennsylvania. The output is a large list.
 mcmc.odesim <- function(
@@ -36,10 +37,10 @@ mcmc.odesim <- function(
   lik.curr = FALSE,             # use weekly, independent likelihood for current data (Boolean)
   lik.old = FALSE,              # if !lik.curr & lik.old: cond. likelihood based on increments
                                 # if !lik.curr & !lik.old: cond. joint normal approximation
-  p.vecs,             # weekly vector of delay probabilities
-  pres.delay = 0,     # number of days from sypmtoms to clinical presenation         
-  active.surv = TRUE, # use active surveillance data (Boolean)
-  p.asympt = .4,      # asymptomatic proportion (only used if active.surv = TRUE)
+  p.vecs,               # weekly vector of delay probabilities
+  pres.delay = 0,       # number of days from sypmtoms to clinical presenation         
+  active.surv = FALSE,  # use active surveillance data (Boolean)
+  p.asympt = .4,        # asymptomatic proportion (only used if active.surv = TRUE)
   total.size.constraint = FALSE,  # require estimated cumulative cases to be within 10% of observed data (Boolean)
   sf.choice = FALSE,              # estimate proportion of symptomatic infecteds (Boolean)
   ### Initialize parameters ###
@@ -68,7 +69,7 @@ mcmc.odesim <- function(
   c0 = 1,                     # adaptive constant (see Shaby and Wells for details)
   c1 = 0.8,                   # adaptive constant (see Shaby and Wells for details)
   var.tune = NULL,            # list, order= beta,ode.params,rr,s2,lik
-  Sigma.tune = NULL          # list, order= beta,ode.params,rr,s2,lik
+  Sigma.tune = NULL           # list, order= beta,ode.params,rr,s2,lik
 ){
 
   ########################################################################

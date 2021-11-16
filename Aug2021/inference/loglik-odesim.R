@@ -36,17 +36,14 @@ r_ll <- function(means, counts){
 
 # Helper function 3 - Python-based multinomial logpmf
 if (OPT_USE_PY_LL) {
-  # Use Python multinomial log-pmf (MUCH FASTER)
-  tryCatch(
-    {
+  # Use Python multinomial log-pmf (MUCH FASTER)  
+  tryCatch({
       library(reticulate)
-      source_python("tools/py_faster_stats.py") # path is relative to this file, remember to source with chdir = TRUE
-    },
-    error <- function(e) {
+      source_python("./py_faster_stats.py") # path is relative to this file, remember to source with chdir = TRUE
+    }, error = function(e) {
       stop(c("Unable to import Python multinomial function. Set OPT_USE_PY_LL=FALSE to use R version.", "\n\n", e))
     }
   )
-
   py_ll <- py$py_ll
   multinom_log_pmf <- function(x, y) py_ll(as.matrix(x), as.matrix(y))
 } else {
@@ -473,6 +470,8 @@ loglik.odesim <- function(
           home.deaths.cum[-1] - home.deaths.cum[-length(home.deaths.cum)]
         )
 
+        home.deaths.new[home.deaths.new < 0] <- 0
+
         for (kk in 1:length(hosp.deaths.obs.times)) {
           if (kk == 1) {
             odesim.means <- c(
@@ -494,7 +493,7 @@ loglik.odesim <- function(
           }
         }
       }
-      
+
       # combine likelihoods
       ll.deaths.age <- 0
       # log-likelihood for age-structured data

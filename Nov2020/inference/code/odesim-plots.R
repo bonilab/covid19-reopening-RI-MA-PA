@@ -1,7 +1,19 @@
+#!/usr/bin/env Rscript
+
+# plots-odesim.R
+# authors: Ephraim Hanks, Nathan Wikle, Emily Strong
+# last edited: 23 Nov 2020 
+#
+# Takes ODESIM trajectory output and plots it against the data
+
 plots.odesim <- function(dp,tp,rr){
-    ## dp =  output from data.process.R
-    ## tp = output from traj.process.R
-    ## rr = daily vector of reporting rates
+  # Input:
+  #   dp =  output from data.process.R
+  #   tp = output from traj.process.R
+  #   rr = daily vector of reporting rates
+  # Output: 
+  #   Plots of new symptomatics, hospitalizaitons, current hosps, icu, and vent
+  #     totals, and new deaths.
 
     list2env(dp,globalenv())
     list2env(tp,globalenv())
