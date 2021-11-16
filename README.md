@@ -22,7 +22,7 @@ The code has been tested with R version 3.6.0 (2019-04-26) -- "Planting of a Tre
 - `splines2` (0.4.1)
 - `reticulate` (1.18)
 
-### C
+### C++
 
 
 ## Instructions
