@@ -21,6 +21,17 @@ The code has been tested with R version 3.6.0 (2019-04-26) -- "Planting of a Tre
 - `msm` (1.6.8)
 - `splines2` (0.4.1)
 - `reticulate` (1.18)
+- `doMC` (1.3.7)
+- `extrafont` (0.17)
+- `scales` (1.1.1)
+- `dplyr` (1.0.7)
+- `forcats` (0.5.1)
+- `viridis` (0.6.1)
+- `hrbrthemes` (0.8.0)
+- `ggplot2` (3.3.5)
+- `ggridges` (0.5.2)
+
+In addition, the Ubunto Mono font family is used in the production of several figures. It can be downloaded [here](https://fonts.google.com/specimen/Ubuntu+Mono).
 
 ### C++
 
