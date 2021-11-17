@@ -38,5 +38,17 @@ In addition, the Ubunto Mono font family is used in the production of several fi
 
 ## Instructions
 
-Before running any code, make sure the required R packages have been installed. [...]
+This repository contains two main directories, `./Aug2021` and `./Nov2020`. These correspond to data, source code, and results for the accepted version of this manuscript and an earlier preprint, respectively. 
+
+The `./Aug2021` directory contains several subfolders:
+
+- `cpp-v5-discharges-nonhospdeaths`: C++ source code to perform a deterministic solve of our age-structured ordinary differential equations (ODE) model.
+- `data`: CSVs containing observed epidemic data from Rhode Island, Massachusetts, and Pennsylvania.
+- `inference`: R source code to reproduce the analysis and figures in the paper/supp. materials.
+- `output`: output files from our analysis and figures found in the manuscript and supp. materials.
+
+In addition, this repository contains a main file (`./Aug2021/inference/main.R`) which will (a) replicate the analysis in the paper and supplementary materials, and (b) create Figures 2 and 5 from the manuscript as well as supplementary figures S3-S17. 
+
+
+Before running any code, make sure the required R packages have been installed. Set the R working directory to the location of the `main.R` file (ie, `./Aug2021/inference`).
 
