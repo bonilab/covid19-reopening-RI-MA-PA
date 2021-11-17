@@ -47,8 +47,26 @@ The `./Aug2021` directory contains several subfolders:
 - `inference`: R source code to reproduce the analysis and figures in the paper/supp. materials.
 - `output`: output files from our analysis and figures found in the manuscript and supp. materials.
 
-In addition, this repository contains a main file (`./Aug2021/inference/main.R`) which will (a) replicate the analysis in the paper and supplementary materials, and (b) create Figures 2 and 5 from the manuscript as well as supplementary figures S3-S17. 
+In addition, this repository contains a main file (`./Aug2021/inference/main.R`) which will (a) replicate the analysis in the paper and supplementary materials, and (b) create Figures 2 and 5 from the manuscript as well as supplementary figures S3-S17. The script contains 4 sequential steps, which perform the following:
 
+### Step Zero
 
-Before running any code, make sure the required R packages have been installed. Set the R working directory to the location of the `main.R` file (ie, `./Aug2021/inference`).
+- Before running any code, make sure the required R packages have been installed. Set the R working directory to the location of the `main.R` file (ie, `./Aug2021/inference`). 
 
+### Step One
+
+- Load required packages into R.
+
+### Step Two
+
+- Compile `ODESIM` (deterministic solution to ODE model) from C++ source code.
+
+### Step Three
+
+- Replicate the analyses from the manuscript and supplementary materials. **Note that this step is extremely computationally intensive, and is commented out by default.** The sourced R scripts recreate the inference procedures used to obtain all results in the manuscript and supplementary materials, including the "best fitting models" shown in Figures 2, 5, and S13 and S14, as well as the model comparison discussed in Table 3, the sensitivity analyses in Supp. Materials (SM) Section 5.1 (time from symptoms to hospitalization), SM Section 5.2 (time from symptoms to presentation), and SM Section 6 (excess deaths). The output from these scripts are stored in a directory, "./output/MCMC-redo", that is automatically created when the file is souced. Note that **output from these files is already included in "./output/manuscript-results"**; it is not necessary that these files be sourced in order if interest is only in the existing results. 
+   
+- If you choose to recreate all inference results, it is **HIGHLY RECOMMENDED that these files be run in PARALLEL**. A single R script, distributed across five 2.2 GHz Intel Xeon processors from the PSU high-performance computing infrastructure (PSU Roar Supercomputer), takes ~2.5 days to run. If run sequentially, this section of the analysis would take ~65 days.
+
+### Step Four
+
+- Create Figures 2 and 5 and S3-S17 from source code. The results are saved as PDFs or PNGs in `./Aug2021/output/figures`.
