@@ -38,7 +38,7 @@ In addition, the Ubunto Mono font family is used in the production of several fi
 
 ## Instructions
 
-This repository contains two main directories, `./Aug2021` and `./Nov2020`. These correspond to data, source code, and results for the accepted version of this manuscript and an earlier preprint, respectively. 
+This repository contains two main directories, `./Aug2021` and `./Nov2020`. These folders contain supplementary materials for the *accepted version* of this manuscript and an *earlier preprint*, respectively.
 
 The `./Aug2021` directory contains several subfolders:
 
@@ -63,9 +63,9 @@ In addition, this repository contains a main file (`./Aug2021/inference/main.R`)
 
 ### Step Three
 
-- Replicate the analyses from the manuscript and supplementary materials. **Note that this step is extremely computationally intensive, and is commented out by default.** The sourced R scripts recreate the inference procedures used to obtain all results in the manuscript and supplementary materials, including the "best fitting models" shown in Figures 2, 5, and S13 and S14, as well as the model comparison discussed in Table 3, the sensitivity analyses in Supp. Materials (SM) Section 5.1 (time from symptoms to hospitalization), SM Section 5.2 (time from symptoms to presentation), and SM Section 6 (excess deaths). The output from these scripts are stored in a directory, "./output/MCMC-redo", that is automatically created when the file is souced. Note that **output from these files is already included in "./output/manuscript-results"**; it is not necessary that these files be sourced in order if interest is only in the existing results. 
+- Replicate the analyses from the manuscript and supplementary materials. *Note that this step is **extremely computationally intensive**, and is commented out by default.* The sourced R scripts recreate the inference procedures used to obtain all results in the manuscript and supplementary materials, including the "best fitting models" shown in Figures 2, 5, and S13 and S14, as well as the model comparison discussed in Table 3, the sensitivity analyses in Supp. Materials (SM) Section 5.1 (time from symptoms to hospitalization), SM Section 5.2 (time from symptoms to presentation), and SM Section 6 (excess deaths). The output from these scripts are stored in a directory, "./output/MCMC-redo", that is automatically created when the file is souced. Note that **output from these files is already included in "./output/manuscript-results"**; it is not necessary that these files be sourced if interest is only in the existing results. 
    
-- If you choose to recreate all inference results, it is **HIGHLY RECOMMENDED that these files be run in PARALLEL**. A single R script, distributed across five 2.2 GHz Intel Xeon processors from the PSU high-performance computing infrastructure (PSU Roar Supercomputer), takes ~2.5 days to run. If run sequentially, this section of the analysis would take ~65 days.
+- If you choose to recreate all inferential results, it is **HIGHLY RECOMMENDED** that these files be run in **PARALLEL**. A single R script, distributed across five 2.2 GHz Intel Xeon processors from the PSU high-performance computing infrastructure (PSU Roar Supercomputer), takes ~2.5 days to run. If run sequentially, this section of the analysis would take ~65 days.
 
 ### Step Four
 
