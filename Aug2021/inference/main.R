@@ -62,12 +62,12 @@ system(paste("make -C", odepath))
 ###
 ### Note that output from these files is already included in 
 ###   "./output/manuscript-results"; it is not necessary that these files be 
-###   sourced in order if interests is only in the existing results. 
+###   sourced in order if interest is only in the existing results. 
 ###   
 ### If you choose to recreate all inference results, it is HIGHLY RECOMMENDED
 ###   that these files be run in PARALLEL. A single R script, distributed across 
 ###   five 2.2 GHz Intel Xeon processors from the PSU high-performance computing 
-###   infrastructure (PSU Roar Supercomputer), takes ~2.5 days to run,.
+###   infrastructure (PSU Roar Supercomputer), takes ~2.5 days to run.
 ###   If run sequentially, this section of the analysis would take ~65 days.
 
 ### computing set-up
